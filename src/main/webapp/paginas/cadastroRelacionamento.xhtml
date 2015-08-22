@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:asp="http://achesuapeca.com.br/taglib"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	template="/template/main.xhtml">
+
+	<ui:define name="tituloPagina">
+		Cadastro Pessoa	
+	</ui:define>
+	
+	<ui:define name="corpo">
+		<c:when test="#{param.idPessoa != null}">
+			<f:metadata>
+	        	<f:viewAction action="#{pessoaCadastroController.inicializar(param.idPessoa)}"/>
+	    	</f:metadata>
+		</c:when>
+		<c:otherwise>
+			<f:metadata>
+	        	<f:viewAction action="#{pessoaCadastroController.inicializar(null)}"/>
+	    	</f:metadata>
+		</c:otherwise>
+		<h:form>
+			<p:steps styleClass="custom">
+		    	<p:menuitem value="Dados Gerais" />
+		    	<p:menuitem value="Relacionamentos" />
+			</p:steps>
+			<p:messages autoUpdate="true"/>
+			<h:panelGrid id="grid" columns="2" cellpadding="5">
+				<h:outputLabel value="Nome completo*:" />
+				<p:inputText value="#{pessoaCadastroController.pessoa.nome}" required="true" requiredMessage="O campo nome é obrigatório"/>
+		
+				<h:outputLabel value="Sexo*:" />
+				<p:selectOneRadio id="sexo" value="#{pessoaCadastroController.pessoa.sexo}" required="true" requiredMessage="O campo sexo é obrigatório">
+		            <f:selectItem itemLabel="F" itemValue="F" />
+		            <f:selectItem itemLabel="M" itemValue="M" />
+		        </p:selectOneRadio>
+				
+				<h:outputLabel value="E-mail:" />
+				<p:inputText value="#{pessoaCadastroController.pessoa.email}" />
+										
+				<h:outputLabel value="Data de nascimento:" />
+				<p:calendar value="#{pessoaCadastroController.pessoa.dataNascimento}" pattern="dd/MM/yyyy" mask="true" />
+		
+				<h:outputLabel value="Cidade de nascimento*:" />
+				<p:inputText value="#{pessoaCadastroController.pessoa.cidade}"/>
+		
+				<h:outputLabel value="Estado de nascimento:*" />
+				<p:selectOneMenu id="estado" value="#{pessoaCadastroController.pessoa.estado}" required="true" requiredMessage="O campo estado é obrigatório" style="width:200px">
+		            <f:selectItem itemLabel="Selecione" itemValue="" />
+		            <f:selectItem itemLabel="DF" itemValue="DF" />
+		        </p:selectOneMenu>
+		
+				<h:outputLabel value="País de nascimento*:" />
+				<p:inputText value="#{pessoaCadastroController.pessoa.pais}" required="true" requiredMessage="O campo país é obrigatório"/>
+		
+				<h:outputLabel value="Falecida?" />
+				<p:selectBooleanButton value="#{pessoaCadastroController.bolFalecida}" onLabel="Sim" offLabel="Não" onIcon="ui-icon-check" offIcon="ui-icon-close" >
+	        		<p:ajax update="lblDataFalecimento,dataFalecimento"/>
+	   			</p:selectBooleanButton>
+				
+				<h:outputLabel id="lblDataFalecimento" value="Data de falecimento:" />
+				<p:calendar id="dataFalecimento" value="#{pessoaCadastroController.pessoa.dataFalecimento}" disabled="#{!pessoaCadastroController.bolFalecida}" mask="99/99/9999"/>
+				
+				<p:commandButton value="Salvar" actionListener="#{pessoaCadastroController.salvar}"/>
+				<p:commandButton value="Adicionar relacionamentos" action="#{pessoaCadastroController.adicionarRelacionamentos}"/>
+			</h:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

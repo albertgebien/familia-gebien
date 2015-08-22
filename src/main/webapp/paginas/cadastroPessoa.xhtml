@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:asp="http://achesuapeca.com.br/taglib"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	template="/template/main.xhtml">
+
+	<ui:define name="tituloPagina">
+		Cadastro Pessoa	
+	</ui:define>
+	
+	
+	<ui:define name="corpo">
+		<c:when test="#{param.idPessoa != null}">
+			<f:metadata>
+	        	<f:viewAction action="#{pessoaCadastroController.inicializar(param.idPessoa)}"/>
+	    	</f:metadata>
+		</c:when>
+		<c:otherwise>
+			<f:metadata>
+	        	<f:viewAction action="#{pessoaCadastroController.inicializar(null)}"/>
+	    	</f:metadata>
+		</c:otherwise>
+		
+		<h:form>
+			<p:tabView orientation="left" id="tabs">
+				<p:tab title="Informações Básicas">
+					<p:messages autoUpdate="true"/>
+					<h:panelGrid id="gridInfoBasica" columns="2" cellpadding="5">
+						<h:outputLabel value="Nome completo*:" />
+						<p:inputText value="#{pessoaCadastroController.pessoa.nome}" required="true" requiredMessage="O campo nome é obrigatório"/>
+				
+						<h:outputLabel value="Sexo*:" />
+						<p:selectOneRadio id="sexo" value="#{pessoaCadastroController.pessoa.sexo}" required="true" requiredMessage="O campo sexo é obrigatório">
+				            <f:selectItem itemLabel="F" itemValue="F" />
+				            <f:selectItem itemLabel="M" itemValue="M" />
+				        </p:selectOneRadio>
+						
+						<h:outputLabel value="E-mail:" />
+						<p:inputText value="#{pessoaCadastroController.pessoa.email}" />
+												
+						<h:outputLabel value="Data de nascimento:" />
+						<p:calendar value="#{pessoaCadastroController.pessoa.dataNascimento}" pattern="dd/MM/yyyy" mask="true" />
+				
+						<h:outputLabel value="Cidade de nascimento*:" />
+						<p:inputText value="#{pessoaCadastroController.pessoa.cidade}"/>
+				
+						<h:outputLabel value="Estado de nascimento:*" />
+						<p:selectOneMenu id="estado" value="#{pessoaCadastroController.pessoa.estado}" required="true" requiredMessage="O campo estado é obrigatório" style="width:200px">
+				            <f:selectItem itemLabel="Selecione" itemValue="" />
+				            <f:selectItem itemLabel="DF" itemValue="DF" />
+				        </p:selectOneMenu>
+				
+						<h:outputLabel value="País de nascimento*:" />
+						<p:inputText value="#{pessoaCadastroController.pessoa.pais}" required="true" requiredMessage="O campo país é obrigatório"/>
+				
+						<h:outputLabel value="Falecida?" />
+						<p:selectBooleanButton value="#{pessoaCadastroController.bolFalecida}" onLabel="Sim" offLabel="Não" onIcon="ui-icon-check" offIcon="ui-icon-close" >
+			        		<p:ajax update="opp,opp1"/>
+			   			</p:selectBooleanButton>
+						
+						<p:outputPanel id="opp" >
+							<h:panelGroup rendered="#{pessoaCadastroController.bolFalecida}">
+								<h:outputLabel id="lblDataFalecimento" value="Data de falecimento:" />
+							</h:panelGroup>
+						</p:outputPanel>
+						
+						<p:outputPanel id="opp1">
+							<h:panelGroup rendered="#{pessoaCadastroController.bolFalecida}">
+								<p:calendar id="dataFalecimento" value="#{pessoaCadastroController.pessoa.dataFalecimento}"  mask="99/99/9999"/>
+							</h:panelGroup>
+						</p:outputPanel>
+						
+						<p:commandButton value="Salvar" actionListener="#{pessoaCadastroController.salvar}" update="tabs"/>
+					</h:panelGrid>
+        		</p:tab>
+        		
+        		<p:tab title="relacionamentos" disabled="#{pessoaCadastroController.pessoa.id == null}">
+        			<p:outputLabel value="#{pessoaCadastroController.pessoa.nome}"/>
+        			<h:panelGrid id="gridRelacionamento" columns="4" cellpadding="5">
+						<p:commandButton value="Adicionar Cônjuge" actionListener="#{pessoaDialogController.adicionarTipoRelacionamento(1,pessoaCadastroController.pessoa.id)}" oncomplete="PF('adicionarPessoaConjuge').show();" update="dlgConjuge"/>
+						<p:commandButton value="Adicionar Filho(a)" actionListener="#{pessoaDialogController.adicionarTipoRelacionamento(4,pessoaCadastroController.pessoa.id)}" oncomplete="PF('adicionarPessoa').show();"/>
+						<p:commandButton value="Adicionar Pai" actionListener="#{pessoaDialogController.adicionarTipoRelacionamento(2,pessoaCadastroController.pessoa.id)}" oncomplete="PF('adicionarPessoa').show();"/>        			
+						<p:commandButton value="Adicionar Mãe" actionListener="#{pessoaDialogController.adicionarTipoRelacionamento(3,pessoaCadastroController.pessoa.id)}" oncomplete="PF('adicionarPessoa').show();"/>        			
+					</h:panelGrid>
+        				
+        				<p:dataTable id="relacionamentos" 
+	                            rows="15"
+	                            var="p"
+	                            paginator="true"
+	                            value="#{relacionamentoCadastroController.relacionamentos}"
+	                            paginatorPosition="bottom"
+	                            paginatorAlwaysVisible="false"
+	                            emptyMessage="Vazio">
+	
+		                    <p:column headerText="Nome">
+		                        #{p.pessoa.nome}
+		                    </p:column>
+		                    
+		                    <p:column headerText="Pessoa Relacionada">
+		                        #{p.pessoaRelacionada.nome}
+		                    </p:column>
+
+		                    <p:column headerText="Tipo relacionamento">
+		                        #{p.tipoRelacionamentoPessoa.nomeTipoRelacionamento}
+		                    </p:column>
+
+		                    <p:column headerText="Ações">
+    	                        <p:commandButton icon="ui-icon-trash"
+                                             actionListener="#{pessoaController.excluirRelacionamento(p.id.idPessoa ,p.id.idPessoaRelacionada)}" 
+                                             update="relacionamentos"/>
+		                    </p:column>
+		                   </p:dataTable>
+        		</p:tab>
+			</p:tabView>
+		</h:form>
+		
+		<!-- INICIO CONJUGE -->
+		<p:dialog id="dlgConjuge" header="" widgetVar="adicionarPessoaConjuge" width="500" height="500">
+    		<h:form prependId="false">
+    			<h3>Realize o cadastro</h3>
+  				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel value="Nome completo*:" />
+					<p:inputText value="#{pessoaDialogController.pessoa.nome}" required="true" requiredMessage="O campo nome é obrigatório"/>
+				
+					<h:outputLabel value="Sexo*:" />
+					<p:selectOneRadio value="#{pessoaDialogController.pessoa.sexo}" required="true" requiredMessage="O campo sexo é obrigatório">
+			            <f:selectItem itemLabel="F" itemValue="F" />
+			            <f:selectItem itemLabel="M" itemValue="M" />
+			        </p:selectOneRadio>
+						
+					<h:outputLabel value="E-mail:" />
+					<p:inputText value="#{pessoaDialogController.pessoa.email}" />
+											
+					<h:outputLabel value="Data de nascimento:" />
+					<p:calendar value="#{pessoaDialogController.pessoa.dataNascimento}" pattern="dd/MM/yyyy" mask="true" />
+			
+					<h:outputLabel value="Cidade de nascimento*:" />
+					<p:inputText value="#{pessoaDialogController.pessoa.cidade}"/>
+				
+					<h:outputLabel value="Estado de nascimento:*" />
+					<p:selectOneMenu value="#{pessoaDialogController.pessoa.estado}" required="true" requiredMessage="O campo estado é obrigatório" style="width:200px">
+			            <f:selectItem itemLabel="Selecione" itemValue="" />
+			            <f:selectItem itemLabel="DF" itemValue="DF" />
+			        </p:selectOneMenu>
+				
+					<h:outputLabel value="País de nascimento*:" />
+					<p:inputText value="#{pessoaDialogController.pessoa.pais}" required="true" requiredMessage="O campo país é obrigatório"/>
+				
+					<h:outputLabel value="Falecida?" />
+					<p:selectBooleanButton value="#{pessoaDialogController.bolFalecida}" onLabel="Sim" offLabel="Não" onIcon="ui-icon-check" offIcon="ui-icon-close" >
+		        		<p:ajax update="opp6,opp7"/>
+		   			</p:selectBooleanButton>
+					
+					<p:outputPanel id="opp6">
+						<h:panelGroup rendered="#{pessoaCadastroController.bolFalecida}">
+							<h:outputLabel id="lblDataFalecimentoDLG" value="Data de falecimento:" />
+						</h:panelGroup>
+					</p:outputPanel>
+
+			        <p:outputPanel id="opp7">
+						<h:panelGroup rendered="#{pessoaCadastroController.bolFalecida}">
+							<p:calendar id="dataFalecimentoDLG" value="#{pessoaCadastroController.pessoa.dataFalecimento}" />
+						</h:panelGroup>
+					</p:outputPanel>
+					
+					
+					<h:outputLabel value="Relação:" />
+					<p:selectOneMenu value="#{pessoaDialogController.idRelacao}">
+						<p:ajax update="opp2,opp3,opp4,opp5"/>
+			            <f:selectItem itemLabel="Casado" itemValue="1" />
+			            <f:selectItem itemLabel="Divorcidado" itemValue="2" />
+			        </p:selectOneMenu>
+			        
+			        <p:outputPanel id="opp2">
+						<h:panelGroup rendered="#{pessoaDialogController.idRelacao == 1 || pessoaDialogController.idRelacao == 2}">
+							<h:outputLabel value="Data de casamento:"  />
+						</h:panelGroup>
+					</p:outputPanel>
+
+			        <p:outputPanel id="opp3">
+						<h:panelGroup rendered="#{pessoaDialogController.idRelacao == 1 || pessoaDialogController.idRelacao == 2}">
+					        <p:calendar value="#{pessoaDialogController.dataCasamento}" mask="true" pattern="dd/MM/yyyy"/>
+						</h:panelGroup>
+					</p:outputPanel>
+
+			        <p:outputPanel id="opp4">
+						<h:panelGroup rendered="#{pessoaDialogController.idRelacao == 2}">
+							<h:outputLabel value="Data do divórcio:"/>
+						</h:panelGroup>
+					</p:outputPanel>
+
+			        <p:outputPanel id="opp5">
+						<h:panelGroup rendered="#{pessoaDialogController.idRelacao == 2}">
+					        <p:calendar value="#{pessoaDialogController.dataDivorcio}" mask="true" pattern="dd/MM/yyyy"/>
+						</h:panelGroup>
+					</p:outputPanel>
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Salvar" actionListener="#{pessoaDialogController.incluir}" oncomplete="onclick=PF('adicionarPessoaConjuge').hide();" />
+					<p:commandButton value="Cancelar" type="button" onclick="PF('adicionarPessoa').hide();"/>
+				</h:panelGrid>
+				<H3>Ou realize uma pesquisa </H3>
+	            <p:commandButton type="button" onclick="PF('pesquisarPessoa').show();" icon="ui-icon-search"/>
+           </h:form>
+		</p:dialog>
+		<!-- FIM CONJUGE -->
+
+		<!-- INICIO PESQUISA PESSOA -->
+		<p:dialog header="Pessoas" widgetVar="pesquisarPessoa" width="500" height="500">
+ 			<h:form prependId="false">
+ 					<h:panelGrid columns="3" cellpadding="5">
+				<h:outputLabel value="Nome:" />
+				<p:inputText value="#{pessoaController.nomePesquisa}"/>
+				<p:commandButton value="Pesquisar" actionListener="#{pessoaController.pesquisarPessoa}" update="listaPessoa"/>
+			</h:panelGrid>
+
+			<p:dataTable id="listaPessoa" 
+                          rows="15"
+                          var="p"
+                          paginator="true"
+                          value="#{pessoaController.listaPessoasPesquisa}"
+                          paginatorPosition="bottom"
+                          paginatorAlwaysVisible="false"
+                          emptyMessage="Vazio"
+                          selectionMode="single" selection="#{pessoaController.pessoaSelecionada}" rowKey="#{p.id}">
+
+                   <p:column headerText="Nome">
+                       #{p.nome}
+                   </p:column>
+                  
+                   <p:column headerText="Data nascimento">
+                       #{p.dataNascimento}
+                   </p:column>
+                
+		            </p:dataTable>
+	            
+	            <p:commandButton value="Selecionar" onclick="PF('pesquisarPessoa').hide();" />
+           </h:form>
+		</p:dialog>  
+		<!-- FIM PESQUISA PESSOA -->
+		
+	</ui:define>
+</ui:composition>
