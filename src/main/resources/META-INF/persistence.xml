@@ -6,10 +6,6 @@
 	<persistence-unit name="gebienPU">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/datasources/gebienDS</jta-data-source>
-		<class>br.com.familiagebien.entidades.Pessoa</class>
-		<class>br.com.familiagebien.entidades.TipoRelacionamentoPessoa</class>
-		<class>br.com.familiagebien.entidades.RelacionamentoPessoa</class>
-		<class>br.com.familiagebien.entidades.RelacionamentoPessoaPK</class>
 		<exclude-unlisted-classes/>
 		 <properties>
 	        <property name="hibernate.show_sql" value="true"/>
