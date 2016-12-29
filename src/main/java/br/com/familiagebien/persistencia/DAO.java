@@ -2,7 +2,9 @@ package br.com.familiagebien.persistencia;
 
 import java.util.List;
 
-import javax.management.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 public abstract class DAO {
 
