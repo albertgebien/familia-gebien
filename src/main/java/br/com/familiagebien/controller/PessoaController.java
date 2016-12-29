@@ -20,7 +20,7 @@ import br.com.familiagebien.exceptions.BaseException;
 import br.com.familiagebien.servico.impl.PessoaServicoEJB;
 import br.com.familiagebien.servico.impl.RelacionamentoPessoaServicoEJB;
 import br.com.familiagebien.servico.impl.TipoRelacionamentoPessoaServicoEJB;
-
+ 
 @Named
 @ViewScoped
 public class PessoaController implements Serializable{

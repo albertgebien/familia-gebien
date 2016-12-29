@@ -10,7 +10,7 @@ import javax.inject.Named;
 import br.com.familiagebien.entidades.Pessoa;
 import br.com.familiagebien.exceptions.BaseException;
 import br.com.familiagebien.servico.impl.PessoaServicoEJB;
-
+ 
 @Named
 @ViewScoped
 public class ListarPessoaController implements Serializable{
