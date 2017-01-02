@@ -4,21 +4,21 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import br.com.familiagebien.entidades.Pessoa;
+import br.com.familiagebien.entidades.RelacionamentoPessoa;
 import br.com.familiagebien.persistencia.CrudDAO;
 
-public class PessoaDAO extends CrudDAO<Pessoa> {
+public class RelacionamentoPessoaDAO extends CrudDAO<RelacionamentoPessoa> {
 
 	private static final long serialVersionUID = 1L;
 
-	public PessoaDAO() {
-		super(Pessoa.class);
+	public RelacionamentoPessoaDAO() {
+		super(RelacionamentoPessoa.class);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Pessoa> listar() {
+	public List<RelacionamentoPessoa> listar() {
 		Query query = getEntityManager().createQuery(
-				"from Pessoa order by nome");
+				"from RelacionamentoPessoa order by nome");
 		return query.getResultList();
 	}
 }
