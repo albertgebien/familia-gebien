@@ -5,15 +5,13 @@
 	
 	<persistence-unit name="gebienPU">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>java:jboss/datasources/GebienDS</jta-data-source>
-		<class>br.com.familiagebien.entidades.Pessoa</class>
-		<class>br.com.familiagebien.entidades.RelacionamentoPessoa</class>
-		<class>br.com.familiagebien.entidades.TipoRelacionamento</class>
+		<jta-data-source>java:jboss/datasources/gebienDS</jta-data-source>
 		<exclude-unlisted-classes/>
 		 <properties>
 	        <property name="hibernate.show_sql" value="true"/>
  	        <property name="hibernate.hbm2ddl.auto" value="update"/>
 			<property name="hibernate.format_sql" value="true" />
 	    </properties>
+	    
 	</persistence-unit>
 </persistence>
