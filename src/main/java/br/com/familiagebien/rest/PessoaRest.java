@@ -17,6 +17,7 @@ import br.com.familiagebien.servico.impl.PessoaServicoEJB;
 @Consumes({ "application/json;charset=ISO-8859-1"})
 public class PessoaRest {
 	
+	// injetando ejb
 	@Inject
 	private PessoaServicoEJB pessoaServico;
 	
