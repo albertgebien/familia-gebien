@@ -1,5 +1,8 @@
 package br.com.familiagebien.exceptions;
 
+import javax.ejb.ApplicationException;
+
+@ApplicationException(rollback=true)
 public class BaseException extends Exception {
 
 	public BaseException(String string) {

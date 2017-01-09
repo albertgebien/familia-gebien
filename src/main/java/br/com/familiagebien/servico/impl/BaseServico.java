@@ -25,8 +25,8 @@ public abstract class BaseServico<T extends EntidadeBase> implements Serializabl
 		return getDAO().obter(id);
 	}
 
-	public void incluir(T t) throws BaseException {
-		getDAO().incluir(t);
+	public T incluir(T t) throws BaseException {
+		return getDAO().incluir(t);
 	}
 
 	public void alterar(T t) throws BaseException {
